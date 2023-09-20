@@ -8,7 +8,8 @@ public class ChessPiece {
         this.color = color;
     }
 
-    public enum Color{
+
+     enum Color{
         WHITE,
         BLACK
     }
