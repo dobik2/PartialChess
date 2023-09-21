@@ -1,6 +1,6 @@
 
 
-public class ChessPiece {
+public abstract class ChessPiece {
     protected Coordinates coord;
     protected Color color;
 
@@ -8,9 +8,16 @@ public class ChessPiece {
         this.color = color;
     }
 
+    public void setCoordinates(Coordinates coord) {
+        this.coord = coord;
+    }
 
-     enum Color{
+    public abstract Coordinates[] getValidMoves();
+
+    enum Color{
         WHITE,
         BLACK
     }
+
+
 }
