@@ -15,8 +15,34 @@ public class Coordinates {
 
     public Coordinates(String chessCoord) {
         this.chessCoord = chessCoord;
-        x = 8 - Integer.parseInt(chessCoord.substring(1));
-        y = chessCoord.charAt(0) - 97;
+        x = chessCoord.charAt(0) - 97;
+        y = 8 - Integer.parseInt(chessCoord.substring(1));
+    }
+
+    public Coordinates offset(int x, int y){
+        this.x += x;
+        this.y += y;
+        chessCoord = (char)(this.x + 97) + String.valueOf(8-this.y);
+        return this;
+    }
+
+    public Coordinates(int x, int y) {
+        this.x = x;
+        this.y = y;
+        chessCoord = (char)(x + 97) + String.valueOf(8-y);
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "x=" + x +
+                ", y=" + y +
+                ", chessCoord='" + chessCoord + '\'' +
+                '}';
+    }
+
+    public String getChessCoord() {
+        return chessCoord;
     }
 
     @Override
@@ -30,11 +56,5 @@ public class Coordinates {
     @Override
     public int hashCode() {
         return Objects.hash(x, y, chessCoord);
-    }
-
-    public Coordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
-        chessCoord = (char)(y + 97) + String.valueOf(8-x);
     }
 }
