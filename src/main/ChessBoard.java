@@ -1,12 +1,32 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 public class ChessBoard {
     private ChessPiece[][] board = new ChessPiece[8][8];
     private List<ChessPiece> white = new ArrayList<>();
     private List<ChessPiece> black = new ArrayList<>();
 
+    private Optional<ChessPiece> getPieceOpt(Coordinates coord){
+        return Optional.ofNullable(getPieceAtCoords(coord));
+    }
+
+    private Optional<ChessPiece> getPieceOpt(String coord){
+        ChessPiece piece = getPieceAtCoords(coord);
+        return Optional.ofNullable(piece);
+    }
+
+    public ChessPiece getPieceAtCoords(Coordinates coord) {
+        return board[coord.getX()][coord.getY()];
+    }
+
+    public ChessPiece getPieceAtCoords(String coord) {
+        Coordinates coordinates = new Coordinates(coord);
+        return getPieceAtCoords(coordinates);
+    }
 
     public void add(ChessPiece piece, String coord) {
         piece.coord = new Coordinates(coord);
@@ -14,22 +34,17 @@ public class ChessBoard {
 
     }
 
-    public ChessPiece getPieceAtCoords(String coord) {
-        Coordinates coordinates = new Coordinates(coord);
-        return board[coordinates.getX()][coordinates.getY()];
-    }
-
     public void move(ChessPiece chessPiece, String coord) {
         Coordinates targetCoord = new Coordinates(coord);
-        ChessPiece targetPiece = board[targetCoord.getX()][targetCoord.getY()];
+        Optional<ChessPiece> targetPiece = getPieceOpt(coord);
         Coordinates[] validMoves = chessPiece.getValidMoves();
 
         if (Arrays.asList(validMoves).contains(targetCoord) && !isPlaceOccupiedByFriend(targetCoord, chessPiece.color)) {
-            board[chessPiece.coord.getX()][chessPiece.coord.getY()] = null;
-            if (targetPiece != null) { // there is an enemy
-                targetPiece.setCoordinates(null);
-                if(targetPiece.color == ChessPiece.Color.WHITE)black.add(targetPiece);
-                else white.add(targetPiece);
+            board[chessPiece.coord.getX()][chessPiece.coord.getY()] = null;  // set old place to empty
+            if (targetPiece.isPresent()  ) { // there is an enemy
+                targetPiece.get().setCoordinates(null);
+                if(targetPiece.get().color == ChessPiece.Color.WHITE)black.add(targetPiece.get());
+                else white.add(targetPiece.get());
             }
             board[targetCoord.getX()][targetCoord.getY()] = chessPiece;
             chessPiece.setCoordinates(targetCoord);
@@ -37,9 +52,8 @@ public class ChessBoard {
     }
 
     private boolean isPlaceOccupiedByFriend(Coordinates coordPlace, ChessPiece.Color color) {
-        //Coordinates coordPlace = new Coordinates(coord);
-        ChessPiece place = board[coordPlace.getX()][coordPlace.getY()];
-        if (place != null && place.color == color) return true;
+        Optional<ChessPiece> place = getPieceOpt(coordPlace);
+        if (place.isPresent() && place.get().color == color) return true;
         return false;
     }
 
