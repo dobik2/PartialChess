@@ -3,18 +3,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
-
 public class ChessBoard {
     private ChessPiece[][] board = new ChessPiece[8][8];
     private List<ChessPiece> white = new ArrayList<>();
     private List<ChessPiece> black = new ArrayList<>();
 
-    private Optional<ChessPiece> getPieceOpt(Coordinates coord){
+    private Optional<ChessPiece> getPieceOpt(Coordinates coord) {
         return Optional.ofNullable(getPieceAtCoords(coord));
     }
 
-    private Optional<ChessPiece> getPieceOpt(String coord){
+    private Optional<ChessPiece> getPieceOpt(String coord) {
         ChessPiece piece = getPieceAtCoords(coord);
         return Optional.ofNullable(piece);
     }
@@ -26,6 +24,10 @@ public class ChessBoard {
     public ChessPiece getPieceAtCoords(String coord) {
         Coordinates coordinates = new Coordinates(coord);
         return getPieceAtCoords(coordinates);
+    }
+
+    public void remove(ChessPiece piece) {
+        board[piece.coord.getX()][piece.coord.getY()] = null;
     }
 
     public void add(ChessPiece piece, String coord) {
@@ -40,14 +42,14 @@ public class ChessBoard {
         Coordinates[] validMoves = chessPiece.getValidMoves();
 
         if (Arrays.asList(validMoves).contains(targetCoord) && !isPlaceOccupiedByFriend(targetCoord, chessPiece.color)) {
-            board[chessPiece.coord.getX()][chessPiece.coord.getY()] = null;  // set old place to empty
-            if (targetPiece.isPresent()  ) { // there is an enemy
-                targetPiece.get().setCoordinates(null);
-                if(targetPiece.get().color == ChessPiece.Color.WHITE)black.add(targetPiece.get());
+            remove(chessPiece); // set old field to empty
+            if (targetPiece.isPresent()) { // there is an enemy
+                targetPiece.get().setCoordinates(null); // set enemy's coordinates to null
+                if (targetPiece.get().color == ChessPiece.Color.WHITE)
+                    black.add(targetPiece.get());  // add enemy to list of removed chess pieces
                 else white.add(targetPiece.get());
             }
-            board[targetCoord.getX()][targetCoord.getY()] = chessPiece;
-            chessPiece.setCoordinates(targetCoord);
+            add(chessPiece, coord);
         }
     }
 
@@ -60,6 +62,7 @@ public class ChessBoard {
     public ChessPiece[] getWhiteCapturedPieces() {//        return moves.toArray(new Coordinates[moves.size()])
         return white.toArray(new ChessPiece[white.size()]);
     }
+
     public ChessPiece[] getBlackCapturedPieces() {//        return moves.toArray(new Coordinates[moves.size()])
         return black.toArray(new ChessPiece[black.size()]);
     }

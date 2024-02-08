@@ -9,21 +9,23 @@ public class Knight extends ChessPiece {
     @Override
     public Coordinates[] getValidMoves() {
         List<Coordinates> moves = new ArrayList<>();
-        if (coord.getY() >= 2) {    //checking if Knight won't go beyond the board
-            if (coord.getX() <= 6) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(1,-2));
-            if (coord.getX() >= 1) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(-1,-2));
+        int x = coord.getX();
+        int y = coord.getY();
+        if (y >= 2) {    //checking if Knight won't go beyond the board
+            if (x <= 6) moves.add(coord.offset(1,-2));
+            if (x >= 1) moves.add(coord.offset(-1,-2));
         }
-        if (coord.getY() >= 1) {
-            if (coord.getX() <= 5) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(2,-1));
-            if (coord.getX() >= 2) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(-2,-1));
+        if (y >= 1) {
+            if (x <= 5) moves.add(coord.offset(2,-1));
+            if (x >= 2) moves.add(coord.offset(-2,-1));
         }
-        if (coord.getY() <= 6) {
-            if (coord.getX() <= 5) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(2,1));
-            if (coord.getX() >= 2) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(-2,1));
+        if (y <= 6) {
+            if (x <= 5) moves.add(coord.offset(2,1));
+            if (x >= 2) moves.add(coord.offset(-2,1));
         }
-        if (coord.getY() <= 5) {
-            if (coord.getX() <= 6) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(1,2));
-            if (coord.getX() >= 1) moves.add(new Coordinates(coord.getX(), coord.getY()).offset(-1,2));
+        if (y <= 5) {
+            if (x <= 6) moves.add(coord.offset(1,2));
+            if (x >= 1) moves.add(coord.offset(-1,2));
         }
         return moves.toArray(new Coordinates[moves.size()]);
     }

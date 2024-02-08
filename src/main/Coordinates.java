@@ -19,17 +19,14 @@ public class Coordinates {
         y = 8 - Integer.parseInt(chessCoord.substring(1));
     }
 
-    public Coordinates offset(int x, int y){
-        this.x += x;
-        this.y += y;
-        chessCoord = (char)(this.x + 97) + String.valueOf(8-this.y);
-        return this;
-    }
-
     public Coordinates(int x, int y) {
         this.x = x;
         this.y = y;
         chessCoord = (char)(x + 97) + String.valueOf(8-y);
+    }
+
+    public Coordinates offset(int x, int y){
+        return new Coordinates(this.x + x, this.y + y);
     }
 
     @Override
